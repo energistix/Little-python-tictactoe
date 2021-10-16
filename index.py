@@ -2,7 +2,7 @@ from tkinter import *
 from math import floor
 from random import randint
 
-menu = Tk()
+window = Tk()
 
 
 def click(e):
@@ -16,6 +16,11 @@ class Grid():
         self.window = window
         self.canvas = Canvas(window, height=cell_size*3, width=cell_size*3)
         self.canvas.pack()
+        self.canvas.grid(column=0, row=1)
+        self.labelText = StringVar()
+        self.labelText.set("x's turn")
+        self.label: Label = Label(self.window, textvariable=self.labelText)
+        self.label.grid(column=0, row=0)
         self.turn = "x"
 
         for i in range(9):
@@ -55,9 +60,10 @@ class Cell():
         if(self.value == ""):
             self.value = self.grid.turn
             self.grid.turn = ("x", "o")[self.grid.turn == "x"]
+            self.grid.labelText.set("{}'s turn".format(self.grid.turn))
             self.draw()
 
 
-grid = Grid(menu, 100)
-menu.bind("<Button-1>", grid.click_event)
-menu.mainloop()
+grid = Grid(window, 100)
+window.bind("<Button-1>", grid.click_event)
+window.mainloop()
