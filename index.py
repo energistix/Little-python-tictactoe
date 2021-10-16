@@ -45,7 +45,7 @@ class Cell():
         self.size: int = grid.cell_size
         self.grid: Grid = grid
 
-    def draw(self) -> None:
+    def draw(self):
         if(self.value == "o"):
             self.canvas.create_oval(self.x*self.size+self.size/10, self.y*self.size+self.size/10,
                                     self.x*self.size+self.size/10*9, self.y*self.size+self.size/10*9)
