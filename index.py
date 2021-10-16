@@ -1,5 +1,6 @@
 from tkinter import *
 from math import floor
+from random import randint
 
 menu = Tk()
 
@@ -15,8 +16,10 @@ class Grid():
         self.window = window
         self.canvas = Canvas(window, height=cell_size*3, width=cell_size*3)
         self.canvas.pack()
+        self.turn = "x"
+
         for i in range(9):
-            self.cells.append(Cell(i, self.canvas))
+            self.cells.append(Cell(i, self))
         for cell in self.cells:
             self.canvas.create_rectangle(
                 cell.x*cell_size+2, cell.y*cell_size+2, cell.x*cell_size+cell_size-1, cell.y*cell_size+cell_size-1)
@@ -29,21 +32,32 @@ class Grid():
 
 
 class Cell():
-    def __init__(self, index: int, canvas: Canvas) -> None:
+    def __init__(self, index: int, grid: Grid) -> None:
         self.value = ""
         self.index = index
         self.x = index % 3
         self.y = floor(index / 3)
-        self.canvas = canvas
+        self.canvas: Canvas = grid.canvas
+        self.size: int = grid.cell_size
+        self.grid: Grid = grid
 
     def draw(self) -> None:
-        self.canvas.create_oval(self.x*50+5, self.y*50+5,
-                                self.x*50+45, self.y*50+45)
+        if(self.value == "o"):
+            self.canvas.create_oval(self.x*self.size+self.size/10, self.y*self.size+self.size/10,
+                                    self.x*self.size+self.size/10*9, self.y*self.size+self.size/10*9)
+        if(self.value == "x"):
+            self.canvas.create_line(self.x*self.size+self.size/10, self.y*self.size+self.size/10,
+                                    self.x*self.size+self.size/10*9, self.y*self.size+self.size/10*9)
+            self.canvas.create_line(self.x*self.size+self.size/10*9, self.y*self.size+self.size/10,
+                                    self.x*self.size+self.size/10, self.y*self.size+self.size/10*9)
 
     def click_event(self):
-        print(self.index)
+        if(self.value == ""):
+            self.value = self.grid.turn
+            self.grid.turn = ("x", "o")[self.grid.turn == "x"]
+            self.draw()
 
 
-grid = Grid(menu, 50)
+grid = Grid(menu, 100)
 menu.bind("<Button-1>", grid.click_event)
 menu.mainloop()
