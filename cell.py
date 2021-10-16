@@ -13,6 +13,7 @@ class Cell():
         self.grid: Grid = grid
 
     def draw(self):
+        # drawing the cell based on its value
         if(self.value == "o"):
             self.canvas.create_oval(self.x*self.size+self.size/10, self.y*self.size+self.size/10,
                                     self.x*self.size+self.size/10*9, self.y*self.size+self.size/10*9)
@@ -23,6 +24,7 @@ class Cell():
                                     self.x*self.size+self.size/10, self.y*self.size+self.size/10*9)
 
     def click_event(self):
+        # switching states if possible when a user clicks on the cell
         if(self.value == "" and self.grid.ended == False):
             self.value = self.grid.turn
             self.grid.turn = ("x", "o")[self.grid.turn == "x"]
