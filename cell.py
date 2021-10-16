@@ -27,6 +27,6 @@ class Cell():
         # switching states if possible when a user clicks on the cell
         if(self.value == "" and self.grid.ended == False):
             self.value = self.grid.turn
+            self.draw()
             self.grid.turn = ("x", "o")[self.grid.turn == "x"]
             self.grid.labelText.set("{}'s turn".format(self.grid.turn))
-            self.draw()

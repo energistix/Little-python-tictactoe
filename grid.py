@@ -1,7 +1,7 @@
 from tkinter import *
 from math import floor
 from cell import Cell
-
+from time import sleep
 
 class Grid():
     def __init__(self, window: Tk, cell_size: int) -> None:
@@ -17,11 +17,14 @@ class Grid():
         self.label.grid(column=0, row=0)
         self.turn = "x"
         self.ended = False
-
+        self.draw_cells_frames()
+    
+    def draw_cells_frames(self):
         for i in range(9):
             self.cells.append(Cell(i, self))
             self.canvas.create_rectangle(
-                i % 3 * cell_size + 2, floor(i / 3) * cell_size + 2, i % 3 * cell_size + cell_size - 1, floor(i / 3) * cell_size+cell_size - 1)
+                i % 3 * self.cell_size + 2, floor(i / 3) * self.cell_size + 2, i % 3 * self.cell_size + self.cell_size - 1, floor(i / 3) * self.cell_size + self.cell_size - 1,
+                fill="white")
 
     def click_event(self, e: Event):
         # trigger cell click events
@@ -42,6 +45,7 @@ class Grid():
             if(state != ""):
                 self.ended = True
                 self.labelText.set("{} won".format(state))
+                self.reset()
 
         # check cols
         for i in range(3):
@@ -52,6 +56,8 @@ class Grid():
             if(state != ""):
                 self.ended = True
                 self.labelText.set("{} won".format(state))
+                self.label.update()
+                self.reset()
 
         # check diagonals
         state = self.cells[0].value
@@ -61,6 +67,8 @@ class Grid():
         if(state != ""):
             self.ended = True
             self.labelText.set("{} won".format(state))
+            self.label.update()
+            self.reset()
 
         state = self.cells[2].value
         for i in (4, 6):
@@ -69,3 +77,15 @@ class Grid():
         if(state != ""):
             self.ended = True
             self.labelText.set("{} won".format(state))
+            self.label.update()
+            self.reset()
+
+    def reset(self):
+        sleep(1)
+        for cell in self.cells:
+            cell.value = ""
+            cell.draw()
+        self.ended = False
+        self.turn = "x"
+        self.labelText.set("x's turn")
+        self.draw_cells_frames()
