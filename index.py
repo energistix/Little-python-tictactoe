@@ -21,6 +21,7 @@ class Grid():
         self.label: Label = Label(self.window, textvariable=self.labelText)
         self.label.grid(column=0, row=0)
         self.turn = "x"
+        self.ended = False
 
         for i in range(9):
             self.cells.append(Cell(i, self))
@@ -35,11 +36,47 @@ class Grid():
         index = y*3+x
         if(not (index < 0 or index > 8 or x < 0 or x > 2 or y < 0 or y > 2)):
             self.cells[index].click_event()
+            self.checkWin()
+
+    def checkWin(self):
+        for i in range(3):
+            state = self.cells[i*3].value
+            for j in range(3):
+                if(state != self.cells[i*3+j].value):
+                    state = ""
+            if(state != ""):
+                self.ended = True
+                self.labelText.set("{} won".format(state))
+
+        for i in range(3):
+            state = self.cells[i].value
+            for j in range(3):
+                if(state != self.cells[i+j*3].value):
+                    state = ""
+            if(state != ""):
+                self.ended = True
+                self.labelText.set("{} won".format(state))
+
+        state = self.cells[0].value
+        for i in (4, 8):
+            if(state != self.cells[i].value):
+                state = ""
+        if(state != ""):
+            self.ended = True
+            self.labelText.set("{} won".format(state))
+
+        state = self.cells[2].value
+        for i in (4, 6):
+            if(state != self.cells[i].value):
+                state = ""
+        if(state != ""):
+            self.ended = True
+            self.labelText.set("{} won".format(state))
 
 
 class Cell():
     def __init__(self, index: int, grid: Grid) -> None:
-        self.value = ""
+        self.value: str = ""
         self.index = index
         self.x = index % 3
         self.y = floor(index / 3)
@@ -58,7 +95,7 @@ class Cell():
                                     self.x*self.size+self.size/10, self.y*self.size+self.size/10*9)
 
     def click_event(self):
-        if(self.value == ""):
+        if(self.value == "" and self.grid.ended == False):
             self.value = self.grid.turn
             self.grid.turn = ("x", "o")[self.grid.turn == "x"]
             self.grid.labelText.set("{}'s turn".format(self.grid.turn))
