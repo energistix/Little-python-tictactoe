@@ -32,7 +32,9 @@ class Grid():
     def click_event(self, e: Event):
         x = floor(e.x / self.cell_size)
         y = floor(e.y / self.cell_size)
-        self.cells[y*3+x].click_event()
+        index = y*3+x
+        if(not (index < 0 or index > 8 or x < 0 or x > 2 or y < 0 or y > 2)):
+            self.cells[index].click_event()
 
 
 class Cell():
