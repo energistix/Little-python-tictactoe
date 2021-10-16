@@ -1,6 +1,5 @@
 from tkinter import *
 from math import floor
-from random import randint
 
 window = Tk()
 
