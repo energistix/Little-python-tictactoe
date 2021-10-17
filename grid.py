@@ -1,7 +1,9 @@
+from os import write
 from tkinter import *
 from math import floor
 from cell import Cell
 from time import sleep
+import json
 
 
 class Grid():
@@ -13,19 +15,34 @@ class Grid():
         self.canvas.pack()
         self.canvas.grid(column=0, row=1)
 
+        try:
+            file = open("./score.json", "r")
+            text = file.read()
+            file.close()
+            self.points = json.loads(text)
+        except:
+            file = open("./score.json", "w")
+            file.write("{\"x\":0, \"o\":0}")
+            self.points = {"x": 0, "o": 0}
+            file.close()
+
+        if(not ("x" in self.points)):
+            self.points["x"] = 0
+        if(not ("o" in self.points)):
+            self.points["o"] = 0
         self.labelText = StringVar()
         self.labelText.set("x's turn")
         self.label: Label = Label(self.window, textvariable=self.labelText)
         self.label.grid(column=0, row=0)
 
         self.score_x_text = StringVar()
-        self.score_x_text.set("x : 0")
+        self.score_x_text.set("x : {}".format(self.points["x"]))
         self.score_x_label: Label = Label(
             self.window, textvariable=self.score_x_text)
         self.score_x_label.grid(column=1, row=0)
 
         self.score_o_text = StringVar()
-        self.score_o_text.set("o : 0")
+        self.score_o_text.set("o : {}".format(self.points["o"]))
         self.score_o_label: Label = Label(
             self.window, textvariable=self.score_o_text)
         self.score_o_label.grid(column=1, row=1)
@@ -33,7 +50,6 @@ class Grid():
         self.turn = "x"
         self.ended = False
         self.draw_cells_frames()
-        self.points = {"x": 0, "o": 0}
 
     def draw_cells_frames(self):
         for i in range(9):
@@ -108,3 +124,5 @@ class Grid():
     def update_score(self):
         self.score_o_text.set("o : {}".format(self.points["o"]))
         self.score_x_text.set("x : {}".format(self.points["x"]))
+        file = open("./score.json", "w")
+        file.write(json.dumps(self.points))
