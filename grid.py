@@ -3,6 +3,7 @@ from math import floor
 from cell import Cell
 from time import sleep
 
+
 class Grid():
     def __init__(self, window: Tk, cell_size: int) -> None:
         self.cells = []
@@ -18,12 +19,14 @@ class Grid():
         self.turn = "x"
         self.ended = False
         self.draw_cells_frames()
-    
+
     def draw_cells_frames(self):
         for i in range(9):
             self.cells.append(Cell(i, self))
             self.canvas.create_rectangle(
-                i % 3 * self.cell_size + 2, floor(i / 3) * self.cell_size + 2, i % 3 * self.cell_size + self.cell_size - 1, floor(i / 3) * self.cell_size + self.cell_size - 1,
+                i % 3 * self.cell_size + 2, floor(i / 3) * self.cell_size + 2, i % 3 * self.cell_size +
+                self.cell_size - 1, floor(i / 3) *
+                self.cell_size + self.cell_size - 1,
                 fill="white")
 
     def click_event(self, e: Event):
