@@ -12,13 +12,28 @@ class Grid():
         self.canvas = Canvas(window, height=cell_size*3, width=cell_size*3)
         self.canvas.pack()
         self.canvas.grid(column=0, row=1)
+
         self.labelText = StringVar()
         self.labelText.set("x's turn")
         self.label: Label = Label(self.window, textvariable=self.labelText)
         self.label.grid(column=0, row=0)
+
+        self.score_x_text = StringVar()
+        self.score_x_text.set("x : 0")
+        self.score_x_label: Label = Label(
+            self.window, textvariable=self.score_x_text)
+        self.score_x_label.grid(column=1, row=0)
+
+        self.score_o_text = StringVar()
+        self.score_o_text.set("o : 0")
+        self.score_o_label: Label = Label(
+            self.window, textvariable=self.score_o_text)
+        self.score_o_label.grid(column=1, row=1)
+
         self.turn = "x"
         self.ended = False
         self.draw_cells_frames()
+        self.points = {"x": 0, "o": 0}
 
     def draw_cells_frames(self):
         for i in range(9):
@@ -46,9 +61,7 @@ class Grid():
                 if(state != self.cells[i*3+j].value):
                     state = ""
             if(state != ""):
-                self.ended = True
-                self.labelText.set("{} won".format(state))
-                self.reset()
+                self.won(state)
 
         # check cols
         for i in range(3):
@@ -57,10 +70,7 @@ class Grid():
                 if(state != self.cells[i+j*3].value):
                     state = ""
             if(state != ""):
-                self.ended = True
-                self.labelText.set("{} won".format(state))
-                self.label.update()
-                self.reset()
+                self.won(state)
 
         # check diagonals
         state = self.cells[0].value
@@ -68,20 +78,14 @@ class Grid():
             if(state != self.cells[i].value):
                 state = ""
         if(state != ""):
-            self.ended = True
-            self.labelText.set("{} won".format(state))
-            self.label.update()
-            self.reset()
+            self.won(state)
 
         state = self.cells[2].value
         for i in (4, 6):
             if(state != self.cells[i].value):
                 state = ""
         if(state != ""):
-            self.ended = True
-            self.labelText.set("{} won".format(state))
-            self.label.update()
-            self.reset()
+            self.won(state)
 
     def reset(self):
         sleep(1)
@@ -92,3 +96,15 @@ class Grid():
         self.turn = "x"
         self.labelText.set("x's turn")
         self.draw_cells_frames()
+
+    def won(self, state):
+        self.ended = True
+        self.points[state] += 1
+        self.labelText.set("{} won".format(state))
+        self.label.update()
+        self.reset()
+        self.update_score()
+
+    def update_score(self):
+        self.score_o_text.set("o : {}".format(self.points["o"]))
+        self.score_x_text.set("x : {}".format(self.points["x"]))
