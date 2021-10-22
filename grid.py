@@ -1,4 +1,3 @@
-from os import write
 from tkinter import *
 from math import floor
 from cell import Cell
