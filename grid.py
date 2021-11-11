@@ -102,6 +102,14 @@ class Grid:
         if state != "":
             self.won(state)
 
+        full = True
+        for cell in self.cells:
+            if cell.value == "":
+                full = False
+        if full:
+            self.reset()
+            self.update_score()
+
     def reset(self):
         sleep(1)
         for cell in self.cells:
