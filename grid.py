@@ -5,7 +5,7 @@ from time import sleep
 import json
 
 
-class Grid():
+class Grid:
     def __init__(self, window: Tk, cell_size: int) -> None:
         self.cells = []
         self.cell_size = cell_size
@@ -25,9 +25,9 @@ class Grid():
             self.points = {"x": 0, "o": 0}
             file.close()
 
-        if(not ("x" in self.points)):
+        if not ("x" in self.points):
             self.points["x"] = 0
-        if(not ("o" in self.points)):
+        if not ("o" in self.points):
             self.points["o"] = 0
         self.labelText = StringVar()
         self.labelText.set("x's turn")
@@ -64,42 +64,42 @@ class Grid():
         x = floor(e.x / self.cell_size)
         y = floor(e.y / self.cell_size)
         index = y*3+x
-        if(not (x < 0 or x > 2 or y < 0 or y > 2)):
+        if not (x < 0 or x > 2 or y < 0 or y > 2):
             self.cells[index].click_event()
-            self.checkWin()
+            self.check_win()
 
-    def checkWin(self):
+    def check_win(self):
         # check rows
         for i in range(3):
             state = self.cells[i*3].value
             for j in range(3):
-                if(state != self.cells[i*3+j].value):
+                if state != self.cells[i * 3 + j].value:
                     state = ""
-            if(state != ""):
+            if state != "":
                 self.won(state)
 
         # check cols
         for i in range(3):
             state = self.cells[i].value
             for j in range(3):
-                if(state != self.cells[i+j*3].value):
+                if state != self.cells[i + j * 3].value:
                     state = ""
-            if(state != ""):
+            if state != "":
                 self.won(state)
 
         # check diagonals
         state = self.cells[0].value
         for i in (4, 8):
-            if(state != self.cells[i].value):
+            if state != self.cells[i].value:
                 state = ""
-        if(state != ""):
+        if state != "":
             self.won(state)
 
         state = self.cells[2].value
         for i in (4, 6):
-            if(state != self.cells[i].value):
+            if state != self.cells[i].value:
                 state = ""
-        if(state != ""):
+        if state != "":
             self.won(state)
         
         full = True
@@ -111,6 +111,14 @@ class Grid():
         print(full)
         if(full):
             self.reset()
+
+        full = True
+        for cell in self.cells:
+            if cell.value == "":
+                full = False
+        if full:
+            self.reset()
+            self.update_score()
 
     def reset(self):
         sleep(1)
