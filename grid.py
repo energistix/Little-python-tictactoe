@@ -101,6 +101,16 @@ class Grid():
                 state = ""
         if(state != ""):
             self.won(state)
+        
+        full = True
+        for cell in self.cells:
+            if(cell.value == ""):
+                print(cell.index)
+                print(cell.value)
+                full = False
+        print(full)
+        if(full):
+            self.reset()
 
     def reset(self):
         sleep(1)
