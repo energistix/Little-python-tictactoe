@@ -13,6 +13,8 @@ class Grid:
         self.canvas = Canvas(window, height=cell_size*3, width=cell_size*3)
         self.canvas.pack()
         self.canvas.grid(column=0, row=1)
+        for i in range(9):
+            self.cells.append(Cell(i, self))
 
         try:
             file = open("./score.json", "r")
@@ -52,7 +54,6 @@ class Grid:
 
     def draw_cells_frames(self):
         for i in range(9):
-            self.cells.append(Cell(i, self))
             self.canvas.create_rectangle(
                 i % 3 * self.cell_size + 2, floor(i / 3) * self.cell_size + 2, i % 3 * self.cell_size +
                 self.cell_size - 1, floor(i / 3) *
@@ -105,10 +106,7 @@ class Grid:
         full = True
         for cell in self.cells:
             if(cell.value == ""):
-                print(cell.index)
-                print(cell.value)
                 full = False
-        print(full)
         if(full):
             self.reset()
 
@@ -117,6 +115,7 @@ class Grid:
             if cell.value == "":
                 full = False
         if full:
+            self.label.update()
             self.reset()
             self.update_score()
 
