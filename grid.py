@@ -15,7 +15,8 @@ class Grid:
         self.canvas.grid(column=0, row=1)
         for i in range(9):
             self.cells.append(Cell(i, self))
-
+        
+        # ouverture du fichier de score
         try:
             file = open("./score.json", "r")
             text = file.read()
@@ -31,6 +32,7 @@ class Grid:
             self.points["x"] = 0
         if not ("o" in self.points):
             self.points["o"] = 0
+        
         self.labelText = StringVar()
         self.labelText.set("x's turn")
         self.label: Label = Label(self.window, textvariable=self.labelText)
@@ -61,7 +63,7 @@ class Grid:
                 fill="white")
 
     def click_event(self, e: Event):
-        # trigger cell click events
+        # gestion du click sur la grille
         x = floor(e.x / self.cell_size)
         y = floor(e.y / self.cell_size)
         index = y*3+x
@@ -70,7 +72,7 @@ class Grid:
             self.check_win()
 
     def check_win(self):
-        # check rows
+        # verification des lignes
         for i in range(3):
             state = self.cells[i*3].value
             for j in range(3):
@@ -79,7 +81,7 @@ class Grid:
             if state != "":
                 self.won(state)
 
-        # check cols
+        # verification des collones
         for i in range(3):
             state = self.cells[i].value
             for j in range(3):
@@ -88,7 +90,7 @@ class Grid:
             if state != "":
                 self.won(state)
 
-        # check diagonals
+        # verification des diagonales
         state = self.cells[0].value
         for i in (4, 8):
             if state != self.cells[i].value:
@@ -103,6 +105,7 @@ class Grid:
         if state != "":
             self.won(state)
         
+        # verification des égalités
         full = True
         for cell in self.cells:
             if(cell.value == ""):
@@ -110,16 +113,8 @@ class Grid:
         if(full):
             self.reset()
 
-        full = True
-        for cell in self.cells:
-            if cell.value == "":
-                full = False
-        if full:
-            self.label.update()
-            self.reset()
-            self.update_score()
-
     def reset(self):
+        # remise a 0 de la grille
         sleep(1)
         for cell in self.cells:
             cell.value = ""
@@ -130,6 +125,7 @@ class Grid:
         self.draw_cells_frames()
 
     def won(self, state):
+        # gestionde la victoire
         self.ended = True
         self.points[state] += 1
         self.labelText.set("{} won".format(state))
@@ -138,6 +134,7 @@ class Grid:
         self.update_score()
 
     def update_score(self):
+        # modification des labels et du fichier de score avec les nouveaux scores
         self.score_o_text.set("o : {}".format(self.points["o"]))
         self.score_x_text.set("x : {}".format(self.points["x"]))
         file = open("./score.json", "w")
