@@ -29,11 +29,11 @@ class Grid:
             self.points = {"x": 0, "o": 0}
             file.close()
 
-        # on verifie si self.points contient bien les valeurs nécéssaires (elles aurait pu etre suprimée manuelement par erreur dans le fichier json)
-        if not ("x" in self.points):
-            self.points["x"] = 0
-        if not ("o" in self.points):
-            self.points["o"] = 0
+        # on verifie si self.points contient bien les valeurs nécéssaires
+        # if not ("x" in self.points):
+            # self.points["x"] = 0
+        # if not ("o" in self.points):
+            # self.points["o"] = 0
         
         self.labelText = StringVar()
         self.labelText.set("x's turn")
