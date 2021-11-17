@@ -12,6 +12,7 @@ class Grid:
         self.canvas = Canvas(window, height=cell_size*3, width=cell_size*3)
         self.canvas.pack()
         self.canvas.grid(column=0, row=1)
+        self.canvas.bind("<Button-1>", self.click_event)
         self.last_turn = "x"
         for i in range(9):
             self.cells.append(Cell(i, self))
@@ -49,7 +50,10 @@ class Grid:
         self.score_o_text.set("o : {}".format(self.points["o"]))
         self.score_o_label: Label = Label(
             self.window, textvariable=self.score_o_text)
-        self.score_o_label.grid(column=1, row=1)
+        self.score_o_label.grid(column=2, row=0)
+
+        self.restart_button = Button(self.window, text="restart", command=self.reset)
+        self.restart_button.grid(column=3, row = 0)
 
         self.turn = "x"
         self.ended = False
@@ -64,6 +68,8 @@ class Grid:
                 fill="white")
 
     def click_event(self, e: Event):
+        if self.ended:
+            return
         # gestion du click sur la grille
         x = floor(e.x / self.cell_size)
         y = floor(e.y / self.cell_size)
@@ -116,7 +122,6 @@ class Grid:
 
     def reset(self):
         # remise a 0 de la grille
-        sleep(1)
         for cell in self.cells:
             cell.value = ""
             cell.draw()
@@ -132,7 +137,6 @@ class Grid:
         self.points[state] += 1
         self.labelText.set("{} won".format(state))
         self.label.update()
-        self.reset()
         self.update_score()
 
     def update_score(self):
