@@ -9,7 +9,7 @@ class Grid:
         self.cells = []
         self.cell_size = cell_size
         self.window = window
-        self.canvas = Canvas(window, height=cell_size*3, width=cell_size*3)
+        self.canvas = Canvas(window, height=cell_size*3+20, width=cell_size*3)
         self.canvas.pack()
         self.canvas.grid(column=0, row=1)
         self.canvas.bind("<Button-1>", self.click_event)
@@ -34,6 +34,7 @@ class Grid:
             # self.points["x"] = 0
         # if not ("o" in self.points):
             # self.points["o"] = 0
+        self.frame = Frame(self.window)
         
         self.labelText = StringVar()
         self.labelText.set("x's turn")
@@ -43,21 +44,22 @@ class Grid:
         self.score_x_text = StringVar()
         self.score_x_text.set("x : {}".format(self.points["x"]))
         self.score_x_label: Label = Label(
-            self.window, textvariable=self.score_x_text)
+            self.frame, textvariable=self.score_x_text)
         self.score_x_label.grid(column=1, row=0)
 
         self.score_o_text = StringVar()
         self.score_o_text.set("o : {}".format(self.points["o"]))
         self.score_o_label: Label = Label(
-            self.window, textvariable=self.score_o_text)
+            self.frame, textvariable=self.score_o_text)
         self.score_o_label.grid(column=2, row=0)
 
-        self.restart_button = Button(self.window, text="restart", command=self.reset)
+        self.restart_button = Button(self.frame, text="restart", command=self.reset)
         self.restart_button.grid(column=3, row = 0)
 
         self.turn = "x"
         self.ended = False
         self.draw_cells_frames()
+        self.canvas.create_window(0, cell_size*3, window=self.frame, anchor="nw")
 
     def draw_cells_frames(self):
         for i in range(9):
@@ -86,7 +88,7 @@ class Grid:
                 if state != self.cells[i * 3 + j].value:
                     state = ""
             if state != "":
-                self.won(state)
+                return self.won(state)
 
         # verification des collones
         for i in range(3):
@@ -95,7 +97,7 @@ class Grid:
                 if state != self.cells[i + j * 3].value:
                     state = ""
             if state != "":
-                self.won(state)
+                return self.won(state)
 
         # verification des diagonales
         state = self.cells[0].value
@@ -103,14 +105,14 @@ class Grid:
             if state != self.cells[i].value:
                 state = ""
         if state != "":
-            self.won(state)
+            return self.won(state)
 
         state = self.cells[2].value
         for i in (4, 6):
             if state != self.cells[i].value:
                 state = ""
         if state != "":
-            self.won(state)
+            return self.won(state)
         
         # verification des égalités
         full = True
@@ -118,7 +120,8 @@ class Grid:
             if(cell.value == ""):
                 full = False
         if(full):
-            self.reset()
+            self.ended = True
+            self.labelText.set("tie")
 
     def reset(self):
         # remise a 0 de la grille
