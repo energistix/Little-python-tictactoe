@@ -4,7 +4,6 @@ from cell import Cell
 from time import sleep
 import json
 
-
 class Grid:
     def __init__(self, window: Tk, cell_size: int) -> None:
         self.cells = []
@@ -13,6 +12,7 @@ class Grid:
         self.canvas = Canvas(window, height=cell_size*3, width=cell_size*3)
         self.canvas.pack()
         self.canvas.grid(column=0, row=1)
+        self.last_turn = "x"
         for i in range(9):
             self.cells.append(Cell(i, self))
         
@@ -28,6 +28,7 @@ class Grid:
             self.points = {"x": 0, "o": 0}
             file.close()
 
+        # on verifie si self.points contient bien les valeurs nécéssaires (elles aurait pu etre suprimée manuelement par erreur dans le fichier json)
         if not ("x" in self.points):
             self.points["x"] = 0
         if not ("o" in self.points):
@@ -120,8 +121,9 @@ class Grid:
             cell.value = ""
             cell.draw()
         self.ended = False
-        self.turn = "x"
-        self.labelText.set("x's turn")
+        self.last_turn = ("x", "o")[self.last_turn == "x"]
+        self.turn = self.last_turn
+        self.labelText.set("{}'s turn".format(self.turn))
         self.draw_cells_frames()
 
     def won(self, state):
